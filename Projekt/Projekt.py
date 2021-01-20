@@ -6,6 +6,7 @@ SPRITE_SCALING_PLAYER = 0.2
 SPRITE_SCALING_COIN = 0.25
 SPRITE_SCALING_WALL = 0.5
 COIN_COUNT = 50
+GRAVITY = .45
 
 MOVEMENT_SPEED = 5
 
@@ -54,10 +55,10 @@ class MyGame(arcade.Window):
             self.coin_list.append(coin)
 
         #Create walls just for testing
-        for x in range(173, 650, 64):
+        for x in range(0, 650, 64):
             wall = arcade.Sprite("Assets/Miscellaneous/tile.png", SPRITE_SCALING_WALL)
             wall.center_x = x
-            wall.center_y = 200
+            wall.center_y = 0
             self.wall_list.append(wall)
 
         for y in range(273, 500, 64):
@@ -67,7 +68,7 @@ class MyGame(arcade.Window):
             self.wall_list.append(wall)
         
         #Set up collisions between player and walls
-        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.wall_list)
+        self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, gravity_constant=GRAVITY)
 
     def on_draw(self):
         arcade.start_render()
