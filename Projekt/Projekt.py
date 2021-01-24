@@ -14,6 +14,8 @@ SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 512
 SCREEN_TITLE = "Projekt"
 
+VIEWPORT_MARGIN = SCREEN_WIDTH / 2
+
 class MyGame(arcade.Window):
  
     def __init__(self):
@@ -34,6 +36,7 @@ class MyGame(arcade.Window):
         self.score = 0
         self.physics_engine = None
 
+        self.view_left = 0
         # Don't show the mouse cursor
         self.set_mouse_visible(False)
 
@@ -62,6 +65,9 @@ class MyGame(arcade.Window):
         self.deadly_objects = arcade.tilemap.process_layer(my_map, "DeadlyObjects", 0.5)
         self.background_objects = arcade.tilemap.process_layer(my_map, "BackgroundObjects", 0.5)
         self.background_images = arcade.tilemap.process_layer(my_map, "Background", 0.5)
+
+        self.view_left = 0
+
 
         #Set up collisions between player and walls
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, gravity_constant=GRAVITY)
@@ -104,6 +110,20 @@ class MyGame(arcade.Window):
         for coin in coin_hit_list:
             coin.remove_from_sprite_lists()
             self.score +=1
+        
+        changed_View = False
+
+        left_boundary = self.view_left + VIEWPORT_MARGIN
+        if self.player_sprite.left < left_boundary and self.player_sprite.left > 280:
+            self.view_left -= left_boundary - self.player_sprite.left
+            changed_View = True
+        right_boundary = self.view_left + SCREEN_WIDTH - VIEWPORT_MARGIN
+        if self.player_sprite.right > right_boundary:
+            self.view_left += self.player_sprite.right - right_boundary
+            changed_View = True
+        self.view_left = int(self.view_left)
+        if changed_View:
+                arcade.set_viewport(self.view_left, SCREEN_WIDTH + self.view_left,0 ,SCREEN_HEIGHT)
 
         self.physics_engine.update()
 
