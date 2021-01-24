@@ -23,6 +23,51 @@
   <ItemGroup>
     <Compile Include="Projekt.py" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\" />
+    <Folder Include="Assets\Character\" />
+    <Folder Include="Assets\Maps\" />
+    <Folder Include="Assets\Maps\PNG\" />
+    <Folder Include="Assets\Miscellaneous\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Character\Idle %281%29.png" />
+    <Content Include="Assets\Character\Idle.png" />
+    <Content Include="Assets\Maps\FirstLevel.tmx" />
+    <Content Include="Assets\Maps\PNG\1.png" />
+    <Content Include="Assets\Maps\PNG\10.png" />
+    <Content Include="Assets\Maps\PNG\11.png" />
+    <Content Include="Assets\Maps\PNG\12.png" />
+    <Content Include="Assets\Maps\PNG\13.png" />
+    <Content Include="Assets\Maps\PNG\14.png" />
+    <Content Include="Assets\Maps\PNG\15.png" />
+    <Content Include="Assets\Maps\PNG\16.png" />
+    <Content Include="Assets\Maps\PNG\17.png" />
+    <Content Include="Assets\Maps\PNG\18.png" />
+    <Content Include="Assets\Maps\PNG\2.png" />
+    <Content Include="Assets\Maps\PNG\3.png" />
+    <Content Include="Assets\Maps\PNG\4.png" />
+    <Content Include="Assets\Maps\PNG\5.png" />
+    <Content Include="Assets\Maps\PNG\6.png" />
+    <Content Include="Assets\Maps\PNG\7.png" />
+    <Content Include="Assets\Maps\PNG\8.png" />
+    <Content Include="Assets\Maps\PNG\9.png" />
+    <Content Include="Assets\Maps\PNG\Bush %281%29.png" />
+    <Content Include="Assets\Maps\PNG\Bush %282%29.png" />
+    <Content Include="Assets\Maps\PNG\Bush %283%29.png" />
+    <Content Include="Assets\Maps\PNG\Bush %284%29.png" />
+    <Content Include="Assets\Maps\PNG\coin.png" />
+    <Content Include="Assets\Maps\PNG\Crate.png" />
+    <Content Include="Assets\Maps\PNG\Mushroom_1.png" />
+    <Content Include="Assets\Maps\PNG\Mushroom_2.png" />
+    <Content Include="Assets\Maps\PNG\Sign_2.png" />
+    <Content Include="Assets\Maps\PNG\Stone.png" />
+    <Content Include="Assets\Maps\PNG\Tree_1.png" />
+    <Content Include="Assets\Maps\PNG\Tree_2.png" />
+    <Content Include="Assets\Maps\PNG\Tree_3.png" />
+    <Content Include="Assets\Maps\Tiles.tsx" />
+    <Content Include="Assets\Miscellaneous\BackGround.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
        Visual Studio and specify your pre- and post-build commands in

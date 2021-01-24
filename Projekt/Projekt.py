@@ -2,16 +2,16 @@ import arcade
 import random
 import os
 
-SPRITE_SCALING_PLAYER = 0.2
+SPRITE_SCALING_PLAYER = 0.15
 SPRITE_SCALING_COIN = 0.25
 SPRITE_SCALING_WALL = 0.5
 COIN_COUNT = 50
-GRAVITY = .45
+GRAVITY = .15
 
 MOVEMENT_SPEED = 5
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 640
+SCREEN_HEIGHT = 512
 SCREEN_TITLE = "Projekt"
 
 class MyGame(arcade.Window):
@@ -24,6 +24,10 @@ class MyGame(arcade.Window):
         self.player_list = None
         self.coin_list = None
         self.wall_list = None
+        self.finish_list = None
+        self.deadly_objects = None
+        self.background_objects = None
+        self.background_images = None
 
         # Player info and engine
         self.player_sprite = None
@@ -40,40 +44,36 @@ class MyGame(arcade.Window):
         self.player_list = arcade.SpriteList()
         self.coin_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
+        self.finish_list = arcade.SpriteList()
+        self.deadly_objects = arcade.SpriteList()
+        self.background_objects = arcade.SpriteList()
+        self.background_images = arcade.SpriteList()
 
         self.player_sprite = arcade.Sprite("Assets/Character/Idle.png", SPRITE_SCALING_PLAYER)
-        self.player_sprite.center_x = 50
-        self.player_sprite.center_y = 64
+        self.player_sprite.center_x = 64
+        self.player_sprite.center_y = 192
         self.player_list.append(self.player_sprite)
 
-        #Create random coins
-        for i in range(COIN_COUNT):
-            coin = arcade.Sprite("Assets/Miscellaneous/coin.png", SPRITE_SCALING_COIN)
-            coin.center_x = random.randrange(SCREEN_WIDTH)
-            coin.center_y = random.randrange(SCREEN_HEIGHT)
+        my_map = arcade.tilemap.read_tmx("Assets/Maps/FirstLevel.tmx")
 
-            self.coin_list.append(coin)
+        self.wall_list = arcade.tilemap.process_layer(my_map, "Ground", 0.5)
+        self.coin_list = arcade.tilemap.process_layer(my_map, "Coins", 0.5)
+        self.finish_list = arcade.tilemap.process_layer(my_map, "Finish", 0.5)
+        self.deadly_objects = arcade.tilemap.process_layer(my_map, "DeadlyObjects", 0.5)
+        self.background_objects = arcade.tilemap.process_layer(my_map, "BackgroundObjects", 0.5)
+        self.background_images = arcade.tilemap.process_layer(my_map, "Background", 0.5)
 
-        #Create walls just for testing
-        for x in range(0, 650, 64):
-            wall = arcade.Sprite("Assets/Miscellaneous/tile.png", SPRITE_SCALING_WALL)
-            wall.center_x = x
-            wall.center_y = 0
-            self.wall_list.append(wall)
-
-        for y in range(273, 500, 64):
-            wall = arcade.Sprite("Assets/Miscellaneous/tile.png", SPRITE_SCALING_WALL)
-            wall.center_x = 465
-            wall.center_y = y
-            self.wall_list.append(wall)
-        
         #Set up collisions between player and walls
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, gravity_constant=GRAVITY)
 
     def on_draw(self):
         arcade.start_render()
-        self.coin_list.draw()
+        self.background_images.draw()
+        self.background_objects.draw()
+        self.deadly_objects.draw()
         self.wall_list.draw()
+        self.finish_list.draw()
+        self.coin_list.draw()
         self.player_list.draw()
 
         output = f"Score: {self.score}"
