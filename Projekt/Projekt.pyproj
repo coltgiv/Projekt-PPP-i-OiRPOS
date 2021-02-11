@@ -21,6 +21,18 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GameView.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="mapLoader.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MenuView.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PlayerSprite.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Projekt.py" />
   </ItemGroup>
   <ItemGroup>
