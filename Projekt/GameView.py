@@ -5,6 +5,7 @@ from mapLoader import mapLoader
 from threading import Timer
 from PlayerSprite import PlayerSprite
 from datetime import datetime
+from SoundHandler import SoundHandler
 
 SPRITE_SCALING_COIN = 0.25
 SPRITE_SCALING_WALL = 0.5
@@ -44,9 +45,7 @@ class GameView(arcade.View):
 
         self.init_time = datetime.now()
 
-        self.death_sound = arcade.load_sound("Assets/Sounds/wolfman.wav")
-        self.coin_sound = arcade.load_sound("Assets/Sounds/coin.wav")
-        self.next_level_sound = arcade.load_sound("Assets/Sounds/spell.wav")
+        self.sound_handler = SoundHandler()
 
         arcade.set_background_color(arcade.color.AMAZON)
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player, self.map.wall_list, gravity_constant=GRAVITY) 
@@ -95,12 +94,12 @@ class GameView(arcade.View):
         finished = False
 
         if len(finish_object_hit) > 0:
-            arcade.play_sound(self.next_level_sound)
+            self.sound_handler.play_sound("NextLevel")
             self.load_new_level()
             finished = True
 
         for coin in coin_hit_list:
-            arcade.play_sound(self.coin_sound)
+            self.sound_handler.play_sound("Coin")
             self.last_safe_coord[0] = self.player.center_x
             self.last_safe_coord[1] = self.player.center_y
             coin.remove_from_sprite_lists()
@@ -120,7 +119,7 @@ class GameView(arcade.View):
 
         died = False
         if len(killing_object_hit_list) > 0:
-            arcade.play_sound(self.death_sound)
+            self.sound_handler.play_sound("Death")
             self.life_count -=  1
             if self.life_count < 0:
                 self.player_died()
