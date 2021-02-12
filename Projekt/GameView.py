@@ -72,7 +72,7 @@ class GameView(arcade.View):
         if key == arcade.key.UP and self.is_jumping == False:
             self.player.change_y = 1.5*MOVEMENT_SPEED
             self.is_jumping = True
-            t = Timer(0.5, self.check_jumping)
+            t = Timer(0.6, self.check_jumping)
             t.start()
         #Handle moving left and right
         elif key == arcade.key.LEFT:
