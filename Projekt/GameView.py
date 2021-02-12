@@ -4,6 +4,7 @@ import os
 from mapLoader import mapLoader
 from threading import Timer
 from PlayerSprite import PlayerSprite
+from datetime import datetime
 
 SPRITE_SCALING_COIN = 0.25
 SPRITE_SCALING_WALL = 0.5
@@ -40,6 +41,12 @@ class GameView(arcade.View):
         self.last_safe_coord[1] = 192
         # Don't show the mouse cursor
         self.window.set_mouse_visible(False)
+
+        self.init_time = datetime.now()
+
+        self.death_sound = arcade.load_sound("Assets/Sounds/wolfman.wav")
+        self.coin_sound = arcade.load_sound("Assets/Sounds/coin.wav")
+        self.next_level_sound = arcade.load_sound("Assets/Sounds/spell.wav")
 
         arcade.set_background_color(arcade.color.AMAZON)
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player, self.map.wall_list, gravity_constant=GRAVITY) 
@@ -88,10 +95,12 @@ class GameView(arcade.View):
         finished = False
 
         if len(finish_object_hit) > 0:
+            arcade.play_sound(self.next_level_sound)
             self.load_new_level()
             finished = True
 
         for coin in coin_hit_list:
+            arcade.play_sound(self.coin_sound)
             self.last_safe_coord[0] = self.player.center_x
             self.last_safe_coord[1] = self.player.center_y
             coin.remove_from_sprite_lists()
@@ -111,6 +120,7 @@ class GameView(arcade.View):
 
         died = False
         if len(killing_object_hit_list) > 0:
+            arcade.play_sound(self.death_sound)
             self.life_count -=  1
             if self.life_count < 0:
                 self.player_died()
@@ -131,13 +141,16 @@ class GameView(arcade.View):
         self.window.show_view(game_over_view)
     def load_new_level(self):
         self.current_level += 1
+        finished_time = datetime.now() - self.init_time
         if self.current_level > 2:
-            self.player_died()
+            self.player_finished_game(finished_time)
         else:
-            new_level_view = NewLevelView(self.screen_width, self.screen_height, self.window,self.score, self.current_level)
+            new_level_view = NewLevelView(self.screen_width, self.screen_height, self.window,self.score, self.current_level, finished_time)
             self.window.show_view(new_level_view)
         arcade.set_viewport(0, self.screen_width ,0 ,self.screen_height)
-
+    def player_finished_game(self, finished_time):
+        finished_game_view = FinishedGameView(self.screen_width, self.screen_height, self.window, finished_time)
+        self.window.show_view(finished_game_view)
 class GameOverView(arcade.View):
     def __init__(self,  width, height, window):
         self.width = width
@@ -158,22 +171,47 @@ class GameOverView(arcade.View):
         self.window.show_view(game_view)
 
 class NewLevelView(arcade.View):
-    def __init__(self,  width, height, window, score, level):
+    def __init__(self,  width, height, window, score, level, finished_time):
         self.width = width
         self.height = height
         self.window = window
         self.window.set_mouse_visible(True)
         self.score = score
         self.level = level
-
+        seconds = finished_time.seconds
+        minutes = (seconds // 60) % 60
+        seconds = seconds % 60
+        self.finished_time = str(minutes) + ":" + str(seconds)
     def on_show(self):
         arcade.set_background_color(arcade.color.WHITE)
     def on_draw(self):
         arcade.start_render()
-        arcade.draw_text("You finished level", self.width/2, self.height/2,
-                         arcade.color.BLACK, font_size=50, anchor_x="center")
+        arcade.draw_text(f"You finished level in {self.finished_time}", self.width/2, self.height/2,
+                         arcade.color.BLACK, font_size=40, anchor_x="center")
         arcade.draw_text("Click to start new level",self.width/2, self.height/2 - 75,
                          arcade.color.BLACK, font_size=20, anchor_x="center" )
     def on_mouse_press(self, x, y, button, modifiers):
         game_view = GameView(self.width,self.height, self.window, self.level, self.score)
+        self.window.show_view(game_view)
+
+class FinishedGameView(arcade.View):
+    def __init__(self,  width, height, window, finished_time):
+        self.width = width
+        self.height = height
+        self.window = window
+        self.window.set_mouse_visible(True)
+        seconds = finished_time.seconds
+        minutes = (seconds // 60) % 60
+        seconds = seconds % 60
+        self.finished_time = str(minutes) + ":" + str(seconds)
+    def on_show(self):
+        arcade.set_background_color(arcade.color.WHITE)
+    def on_draw(self):
+        arcade.start_render()
+        arcade.draw_text(f"You finished last level in {self.finished_time}", self.width/2, self.height/2,
+                         arcade.color.BLACK, font_size=40, anchor_x="center")
+        arcade.draw_text("Click to start new game",self.width/2, self.height/2 - 75,
+                         arcade.color.BLACK, font_size=20, anchor_x="center" )
+    def on_mouse_press(self, x, y, button, modifiers):
+        game_view = GameView(self.width,self.height, self.window, 1, 0)
         self.window.show_view(game_view)
