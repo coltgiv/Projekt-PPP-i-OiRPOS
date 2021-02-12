@@ -1,8 +1,10 @@
 import arcade
-
+#Paths to maps
 FIRST_LEVEL_PATH = "Assets/Maps/FirstLevel.tmx"
 SECOND_LEVEL_PATH = "Assets/Maps/SecondLevel.tmx"
+#Class responsible for loading and drawing map
 class mapLoader():
+    #Set up parameters that are used in game
     def __init__(self):
         self.map = None
         self.coin_list = arcade.SpriteList()
@@ -11,7 +13,7 @@ class mapLoader():
         self.deadly_objects = arcade.SpriteList()
         self.background_objects = arcade.SpriteList()
         self.background_images = arcade.SpriteList()
-
+    #Loading map and layers
     def load_level(self, level_index):
         if level_index == 1:
             self.map = arcade.tilemap.read_tmx(FIRST_LEVEL_PATH)
@@ -24,6 +26,7 @@ class mapLoader():
              self.deadly_objects = arcade.tilemap.process_layer(self.map, "DeadlyObjects", 0.5)
              self.background_objects = arcade.tilemap.process_layer(self.map, "BackgroundObjects", 0.5)
              self.background_images = arcade.tilemap.process_layer(self.map, "Background", 0.5)
+    #Draw all layers. The order is important, it should begin with the farthest layer(like background) and end on closest(like player or interactable items)
     def draw_level(self):
         self.background_images.draw()
         self.background_objects.draw()
