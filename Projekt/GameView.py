@@ -8,8 +8,6 @@ from datetime import datetime
 from SoundHandler import SoundHandler
 
 #Constant that define base game mechanics
-SPRITE_SCALING_COIN = 0.25
-SPRITE_SCALING_WALL = 0.5
 GRAVITY = .3
 MOVEMENT_SPEED = 5
 LIFE_AMOUNT = 3
@@ -37,7 +35,7 @@ class GameView(arcade.View):
         self.is_jumping = False
         self.is_checking_jumping = False
         self.view_left = 0
-        self.life_count = 3
+        self.life_count = LIFE_AMOUNT
         self.last_safe_coord = [0] * 2
         self.last_safe_coord[0] = 64
         self.last_safe_coord[1] = 192
@@ -137,7 +135,7 @@ class GameView(arcade.View):
                 arcade.set_viewport(self.view_left, self.screen_width + self.view_left,0 ,self.screen_height)
 
         self.physics_engine.update()
-        #Method that reset value of jumping parameter
+    #Method that reset value of jumping parameter
     def check_jumping(self):
         self.is_jumping = False
     #Create and show GameOverView, used when player dies
